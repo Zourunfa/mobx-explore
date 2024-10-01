@@ -3,14 +3,6 @@ import './App.css'
 
 import { observable } from 'mobx'
 
-// 初始化mobx容器仓库
-// 在组件种使用mbox容器状态
-// 在组件中发起action修改容器状态
-
-class Store {
-  @observable count = 0
-}
-
 function App() {
   return (
     <div className="App">

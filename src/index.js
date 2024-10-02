@@ -3,15 +3,19 @@ import ReactDOM from 'react-dom/client'
 import './index.css'
 import reportWebVitals from './reportWebVitals'
 import { observer } from 'mobx-react-lite'
-import { makeAutoObservable, action, autorun } from 'mobx'
+import { makeAutoObservable, action, autorun, computed } from 'mobx'
 // import './es6/decorator'
 // 配置 MobX
 // configure({ enforceActions: 'never' }); // 可选配置
 
 // 1. 初始化 MobX 容器仓库
 class Store {
-  count = 0
-
+  count = 3
+  price = 10
+  // 和vue的一模一样
+  @computed get totalPrice() {
+    return this.price * this.count
+  }
   constructor() {
     makeAutoObservable(this)
   }
@@ -35,6 +39,8 @@ const App = observer(({ store }) => {
     <div>
       <h1>{store.count}</h1>
       <button onClick={() => store.increament()}>increament</button>
+      <p>Total price: {store.count * store.price}</p>
+      <p>Total price: {store.count * store.price}</p>
     </div>
   )
 })

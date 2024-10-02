@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom/client'
 import './index.css'
 import reportWebVitals from './reportWebVitals'
 import { observer } from 'mobx-react-lite'
-import { makeAutoObservable, action, autorun, computed, configure } from 'mobx'
+import { makeAutoObservable, action, autorun, computed, configure, runInAction } from 'mobx'
 // import './es6/decorator'
 // 配置 MobX
 // configure({ enforceActions: 'never' }); // 可选配置
@@ -42,9 +42,14 @@ autorun(() => {
   console.log('count:', store.count)
 })
 
-// 直接修改会多次触发autorun,所以用装饰action change避免
+// 直接修改会多次触发autorun,所以用装饰action change避免 ,还可以用runInAction包裹
 store.count = 20
 store.price = 20
+
+runInAction(() => {
+  store.count = 20
+  store.price = 20
+})
 // 在组件中使用 MobX 容器状态
 const App = observer(({ store }) => {
   return (

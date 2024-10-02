@@ -3,8 +3,8 @@ import ReactDOM from 'react-dom/client'
 import './index.css'
 import reportWebVitals from './reportWebVitals'
 import { observer } from 'mobx-react-lite'
-import { makeAutoObservable, action } from 'mobx'
-import './es6/decorator'
+import { makeAutoObservable, action, autorun } from 'mobx'
+// import './es6/decorator'
 // 配置 MobX
 // configure({ enforceActions: 'never' }); // 可选配置
 
@@ -21,16 +21,14 @@ class Store {
     this.count++
   }
 }
-@fnStore
-class MyStore {}
-// 添加实例属性
-function fnStore(target) {
-  target.proptotype.aide = 'baz'
-  console.log(target.proptotype, '---target.proptotype')
-}
+const store = new Store()
+// 类比vue的watchEffect
+autorun(() => {
+  // 当store.count发生变化时，会触发该函数
+  console.log('count:', store.count)
+})
 
-console.log(new MyStore().aide, '---new Store().aide')
-
+store.count = 20
 // 在组件中使用 MobX 容器状态
 const App = observer(({ store }) => {
   return (

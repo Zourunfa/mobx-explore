@@ -34,12 +34,29 @@ class Store {
     this.count = 10
     this.price = 2
   }
+
+  @action asyncChange() {
+    setTimeout(() => {
+      // 异步修改的方式
+      // 1.在class定义action函数
+      this.change()
+      // 2.直接调用action函数
+      action('changePrice', () => {
+        this.price = 123123
+      })()
+      // 3.使用runInAction包裹
+      runInAction(() => {
+        this.count = 100
+      })
+    }, 1000)
+  }
 }
 const store = new Store()
 // 类比vue的watchEffect
 autorun(() => {
   // 当store.count发生变化时，会触发该函数
   console.log('count:', store.count)
+  console.log('price:', store.price)
 })
 
 // 直接修改会多次触发autorun,所以用装饰action change避免 ,还可以用runInAction包裹
@@ -50,6 +67,8 @@ runInAction(() => {
   store.count = 20
   store.price = 20
 })
+
+store.asyncChange()
 // 在组件中使用 MobX 容器状态
 const App = observer(({ store }) => {
   return (

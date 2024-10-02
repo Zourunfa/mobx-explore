@@ -3,11 +3,15 @@ import ReactDOM from 'react-dom/client'
 import './index.css'
 import reportWebVitals from './reportWebVitals'
 import { observer } from 'mobx-react-lite'
-import { makeAutoObservable, action, autorun, computed } from 'mobx'
+import { makeAutoObservable, action, autorun, computed, configure } from 'mobx'
 // import './es6/decorator'
 // 配置 MobX
 // configure({ enforceActions: 'never' }); // 可选配置
 
+// 开启使用action严格 修改
+configure({
+  enforceActions: 'observed',
+})
 // 1. 初始化 MobX 容器仓库
 class Store {
   count = 3
@@ -24,6 +28,12 @@ class Store {
   increament() {
     this.count++
   }
+
+  @action
+  change() {
+    this.count = 10
+    this.price = 2
+  }
 }
 const store = new Store()
 // 类比vue的watchEffect
@@ -32,7 +42,9 @@ autorun(() => {
   console.log('count:', store.count)
 })
 
+// 直接修改会多次触发autorun,所以用装饰action change避免
 store.count = 20
+store.price = 20
 // 在组件中使用 MobX 容器状态
 const App = observer(({ store }) => {
   return (
